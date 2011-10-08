@@ -1,4 +1,65 @@
 #!/usr/bin/env perl
 use warnings;
 use strict;
-use App::pow;
+use Clipboard;
+use YAML qw{DumpFile LoadFile};
+use File::Fu;
+
+#-------------------------------------------------------------------------------
+#  INPUT
+#-------------------------------------------------------------------------------
+my ($list, $name, $value) = @ARGV;
+
+#-------------------------------------------------------------------------------
+#  FILE
+#-------------------------------------------------------------------------------
+my $file = File::Fu->home->file('.pow.yaml');
+$file->touch unless $file->e;
+$file = $file->stringify;
+my $data = LoadFile($file);
+
+#-------------------------------------------------------------------------------
+#  RESERVED COMMANDS
+#-------------------------------------------------------------------------------
+if ($list && $list eq 'edit') {
+  system $ENV{EDITOR}, $file;
+}
+elsif($list && $list eq 'help') {
+  print <<END;
+
+USEAGE: 
+  pow [list] [key] [value]
+
+
+END
+}
+else {
+  #-------------------------------------------------------------------------------
+  #  FIND DATA
+  #-------------------------------------------------------------------------------
+  if ( $list && $name && $value ) {
+    # set data
+    $data->{$list}->{$name} = $value;
+    printf qq{ POW! %s in %s is %s, got it.\n}, $name, $list, $value;
+  }
+  elsif ( $list && $name && $data->{$list}->{$name} ) {
+    Clipboard->copy( $data->{$list}->{$name} );
+    printf qq{ POW! just copied %s to your clipboard\n}, $data->{$list}->{$name};
+  }
+  elsif ( $list && $data->{$list} ) {
+    while(my ($k,$v) = each %{ $data->{$list} }){
+      print qq{$k $v\n};
+    }
+  }
+  else {
+    while(my ($k,$v) = each %$data ){
+      next unless length($k);
+      printf qq{%s (%d)\n}
+           , $k 
+           , scalar( keys %$v )
+           ;
+    }
+  }
+
+  DumpFile($file, $data);
+}
