@@ -30,6 +30,18 @@ elsif($list && $list eq 'help') {
 USEAGE: 
   pow [list] [key] [value]
 
+DEMO:
+  > pow test moo zing
+   POW! moo in test is zing, got it.
+  > pow test cow moo
+   POW! cow in test is moo, got it.
+  > pow test moo
+   POW! just copied zing to your clipboard.
+  > pow test
+   moo zing
+   cow moo
+  > pow
+   test (2)
 
 END
 }
@@ -44,7 +56,7 @@ else {
   }
   elsif ( $list && $name && $data->{$list}->{$name} ) {
     Clipboard->copy( $data->{$list}->{$name} );
-    printf qq{ POW! just copied %s to your clipboard\n}, $data->{$list}->{$name};
+    printf qq{ POW! just copied %s to your clipboard.\n}, $data->{$list}->{$name};
   }
   elsif ( $list && $data->{$list} ) {
     while(my ($k,$v) = each %{ $data->{$list} }){
