@@ -10,16 +10,9 @@ my $builder = Module::Build->new(
     dist_version_from   => 'bin/pow',
     meta_merge     => {
         resources => {
-            bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Test-Mock-Redis',
-            repository => 'http://github.com/jlavallee/Test-Mock-Redis/',
+            bugtracker => 'https://github.com/notbenh/pow/issues',
+            repository => 'https://github.com/notbenh/pow',
         },
-        no_index => { package => [ 'Test::Mock::Redis::PossiblyVolitile',
-                                   'Test::Mock::Redis::List',
-                                   'Test::Mock::Redis::Hash',
-                                   'Test::Mock::Redis::ZSet',
-                                   'Test::Mock::Redis::Set',
-                                 ],
-                    },
     },
     build_requires => {
         'Test::More'      => 0,
